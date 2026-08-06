@@ -21,7 +21,7 @@ public static class CategoryEndpoints
            db.Categories.Add(category);
            await db.SaveChangesAsync();
            return Results.Created($"/categories/{category.Id}", category); 
-        });
+        }).RequireAuthorization();
 
         group.MapPut("/{id:int}", async (int id, Category updated, StoreContext db) =>
         {
@@ -31,7 +31,7 @@ public static class CategoryEndpoints
             category.Name = updated.Name;
             await db.SaveChangesAsync();
             return Results.Ok(category);
-        });
+        }).RequireAuthorization();
 
         group.MapDelete("/{id:int}", async (int id, StoreContext db) =>
         {
@@ -41,6 +41,6 @@ public static class CategoryEndpoints
            db.Categories.Remove(category);
            await db.SaveChangesAsync();
            return Results.NoContent();
-        });
+        }).RequireAuthorization();
     }
 }

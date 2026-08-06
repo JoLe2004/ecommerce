@@ -48,7 +48,7 @@ public static class ProductImageEndpoints
 
             var result = new ProductImageDto(productImage.Id, productImage.Url, productImage.IsPrimary);
             return Results.Created($"/products/{productId}/images/{productImage.Id}", result);
-        });
+        }).RequireAuthorization();
 
         group.MapPut("/{id:int}", async (int productId, int id, CreateProductImageDto updated, StoreContext db) =>
         {
@@ -68,7 +68,7 @@ public static class ProductImageEndpoints
             await db.SaveChangesAsync();
             var result = new ProductImageDto(productImage.Id, productImage.Url, productImage.IsPrimary);
             return Results.Ok(result);
-        });
+        }).RequireAuthorization();
 
         group.MapDelete("/{id:int}", async (int productId, int id, StoreContext db) =>
         {
@@ -79,6 +79,6 @@ public static class ProductImageEndpoints
            db.ProductImages.Remove(productImage);
            await db.SaveChangesAsync();
            return Results.NoContent();
-        });
+        }).RequireAuthorization();
     }
 }

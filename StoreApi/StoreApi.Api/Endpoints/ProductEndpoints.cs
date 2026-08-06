@@ -41,7 +41,7 @@ public static class ProductEndpoints
 
             var result = new ProductDto(product.Id, product.Name, product.Price, category.Name);
             return Results.Created($"/products/{product.Id}", result);
-        });
+        }).RequireAuthorization();
 
         group.MapPut("/{id:int}", async (int id, CreateProductDto updated, StoreContext db) =>
         {
@@ -59,7 +59,7 @@ public static class ProductEndpoints
             await db.SaveChangesAsync();
             var result = new ProductDto(product.Id, product.Name, product.Price, category.Name);
             return Results.Ok(result);
-        });
+        }).RequireAuthorization();
 
         group.MapDelete("/{id:int}", async (int id, StoreContext db) =>
         {
@@ -69,7 +69,7 @@ public static class ProductEndpoints
            db.Products.Remove(product);
            await db.SaveChangesAsync();
            return Results.NoContent();
-        });
+        }).RequireAuthorization();
 
     }
 }

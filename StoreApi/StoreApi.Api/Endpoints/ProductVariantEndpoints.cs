@@ -44,7 +44,7 @@ public static class ProductVariantEndpoints
 
             var result = new ProductVariantDto(productVariant.Id, productVariant.Sku, productVariant.Size, productVariant.Color, productVariant.StockQuantity);
             return Results.Created($"/products/{productId}/variants/{productVariant.Id}", result);
-        });
+        }).RequireAuthorization();
 
         group.MapPut("/{id:int}", async (int productId, int id, CreateProductVariantDto updated, StoreContext db) =>
         {
@@ -60,7 +60,7 @@ public static class ProductVariantEndpoints
             await db.SaveChangesAsync();
             var result = new ProductVariantDto(productVariant.Id, productVariant.Sku, productVariant.Size, productVariant.Color, productVariant.StockQuantity);
             return Results.Ok(result);
-        });
+        }).RequireAuthorization();
 
         group.MapDelete("/{id:int}", async (int productId, int id, StoreContext db) =>
         {
@@ -71,6 +71,6 @@ public static class ProductVariantEndpoints
            db.ProductVariants.Remove(productVariant);
            await db.SaveChangesAsync();
            return Results.NoContent();
-        });
+        }).RequireAuthorization();
     }
 }
