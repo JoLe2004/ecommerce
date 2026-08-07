@@ -21,8 +21,11 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapGet("/", () => "Hello World");
+app.MapAuthEndpoints();
 app.MapCategoryEndpoints();
+app.MapOrderEndpoints();
 app.MapProductEndpoints();
+app.MapProductImageEndpoints();
 app.MapProductVariantEndpoints();
 
 DbSeeder.SeedAdmin(app.Services, app.Configuration);

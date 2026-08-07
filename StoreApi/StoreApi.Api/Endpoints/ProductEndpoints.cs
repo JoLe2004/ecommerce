@@ -11,15 +11,35 @@ public static class ProductEndpoints
     {
         var group = app.MapGroup("/products");
 
-        group.MapGet("/", async (StoreContext db) =>
-        {
-            var products = await db.Products
-                .AsNoTracking()
-                .Include(p => p.Category)
-                .Select(p => new ProductDto(p.Id, p.Name, p.Price, p.Category.Name))
+        group.MapGet("/", async (StoreContext db, int page = 1, int pageSize = 20, string? category = null) =>
+        {   
+            var query = db.Products.AsNoTracking().Include(p => p.Category).AsQueryable();
+
+            if (category is not null)
+                query = query.Where(p => p.Category.Name.ToLower() == category.ToLower());
+
+            var totalCount = await query.CountAsync();
+
+            var products = await query
+                .OrderByDescending(p => p.Id)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
+
+            var productDtos = products.Select(p => new ProductDto(
+                p.Id,
+                p.Name,
+                p.Price,
+                p.Category.Name
+            )).ToList();
             
-            return Results.Ok(products);
+            return Results.Ok(new
+            {
+                Page = page,
+                PageSize = pageSize,
+                TotalCount = totalCount,
+                Items = productDtos
+            });
         });
 
         group.MapPost("/", async (CreateProductDto dto, StoreContext db) =>
