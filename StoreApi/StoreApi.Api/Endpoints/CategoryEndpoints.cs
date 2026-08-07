@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using StoreApi.Api.Data;
+using StoreApi.Api.ExceptionHandling;
 using StoreApi.Api.Models;
 
 namespace StoreApi.Api.Endpoints;
@@ -21,7 +22,8 @@ public static class CategoryEndpoints
            db.Categories.Add(category);
            await db.SaveChangesAsync();
            return Results.Created($"/categories/{category.Id}", category); 
-        }).RequireAuthorization();
+        })
+        .RequireAuthorization();
 
         group.MapPut("/{id:int}", async (int id, Category updated, StoreContext db) =>
         {
@@ -31,7 +33,8 @@ public static class CategoryEndpoints
             category.Name = updated.Name;
             await db.SaveChangesAsync();
             return Results.Ok(category);
-        }).RequireAuthorization();
+        })
+        .RequireAuthorization();
 
         group.MapDelete("/{id:int}", async (int id, StoreContext db) =>
         {

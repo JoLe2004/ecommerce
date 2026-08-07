@@ -11,6 +11,7 @@ builder.Services.AddDbContext<StoreContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("StoreContext")));
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
+builder.Services.AddValidation();
 builder.Services.AddJwtAuth(builder.Configuration);
 builder.Services.AddScoped<JwtTokenGenerator>();
 
@@ -30,3 +31,5 @@ app.MapProductVariantEndpoints();
 
 DbSeeder.SeedAdmin(app.Services, app.Configuration);
 app.Run();
+
+public partial class Program { }
